@@ -5,7 +5,8 @@ from collections import defaultdict
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 
-stop_words = set(stopwords.words('spanish'))
+#stop_words = set(stopwords.words('spanish'))
+stop_words = [unidecode(word) for word in set(stopwords.words('spanish'))]
 
 BASE_DIR = os.getcwd()
 ART_DIR = os.path.join(BASE_DIR, 'articles')
@@ -37,14 +38,16 @@ for file in [f for f in os.listdir(ART_DIR) if os.path.isfile(os.path.join(ART_D
             article_text += text
     articles_list.append(article_text)
 
-# Tokenization
-for article_text in articles_list:
+for i, article_text in enumerate(articles_list):
+    with open(f"article_{i}.txt", "w", encoding='utf-8') as text_file:
+        tokens = word_tokenize(article_text)
+        # Filter the stop words
+        filtered_tokens = [token for token in tokens if token not in stop_words]
+        #Save the filtered tokens in a txt file
+        text_file.write(' '.join(filtered_tokens))
+    
     # Initialize a defaultdict object with a default value of 0 for any key added to the dictionary
     word_counts = defaultdict(int)
-    # Tokenize the text of the article
-    tokens = word_tokenize(article_text)
-    # Filter the stop words
-    filtered_tokens = [token for token in tokens if token not in stop_words]
     # Absolute frequency
     for token in filtered_tokens: word_counts[token] += 1
     total_words = sum(word_counts.values())
@@ -53,5 +56,5 @@ for article_text in articles_list:
     # Top n most common words
     top_n = 10
     most_common_words = sorted(relative_frequency.items(), key=lambda x: x[1], reverse=True)[:top_n]
-    print(most_common_words)
+    #print(most_common_words)
     
