@@ -44,7 +44,7 @@ for i, article_text in enumerate(articles_list):
         # Filter the stop words
         filtered_tokens = [token for token in tokens if token not in stop_words]
         #Save the filtered tokens in a txt file
-        text_file.write(' '.join(filtered_tokens))
+        text_file.write(' '.join(filtered_tokens) + "\n")
     
     # Initialize a defaultdict object with a default value of 0 for any key added to the dictionary
     word_counts = defaultdict(int)
