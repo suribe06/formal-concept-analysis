@@ -28,7 +28,7 @@ for file in [f for f in os.listdir(ART_DIR) if os.path.isfile(os.path.join(ART_D
             # Remove accents
             text = unidecode(text)
             # Remove non-letter symbols
-            text = re.sub(r'[^a-zA-Z]+', ' ', text)
+            text = re.sub(r'[^a-zA-Z\d\']+', ' ', text)
             # Remove newline and tab characters
             text = text.replace('\n', ' ').replace('\t', ' ')
             # Remove whitespaces
@@ -42,7 +42,7 @@ for i, article_text in enumerate(articles_list):
     with open(f"article_{i}.txt", "w", encoding='utf-8') as text_file:
         tokens = word_tokenize(article_text)
         # Filter the stop words
-        filtered_tokens = [token for token in tokens if token not in stop_words]
+        filtered_tokens = [token for token in tokens if token not in stop_words and len(token) >= 2]
         #Save the filtered tokens in a txt file
         text_file.write(' '.join(filtered_tokens) + "\n")
     
