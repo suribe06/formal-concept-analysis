@@ -75,13 +75,37 @@ def getGraphUnion(num_articles):
     # Write the graph to file
     OUTPUT_FILE = os.path.join(GR_DIR, 'graph_union.gml')
     nx.write_gml(G_combined, OUTPUT_FILE)
+    n = 10
+    top_nodes = [node[0] for node in sorted(G_combined.degree, key=lambda x: x[1], reverse=True)][:n]
+    # Create the induced subgraph
+    G_induced = G_combined.subgraph(top_nodes)
     # Plot the graph
-    pos = nx.circular_layout(G_combined)
-    nx.draw(G_combined, pos, with_labels=False, node_size=500)
-    labels = nx.get_node_attributes(G_combined, 'name')
-    nx.draw_networkx_labels(G_combined, pos, labels, font_size=12)
+    pos = nx.circular_layout(G_induced)
+    nx.draw(G_induced, pos, with_labels=False, node_size=500)
+    labels = nx.get_node_attributes(G_induced, 'name')
+    nx.draw_networkx_labels(G_induced, pos, labels, font_size=12)
     plt.show()
     return
 
+def getSuperGraph():
+    GRAPH_FILE = os.path.join(GR_DIR, f'graph.gml')
+    G_nx = nx.read_gml(GRAPH_FILE, label='id')
+    # Get the 10 nodes with the highest degree
+    n = 10
+    top_nodes = [node[0] for node in sorted(G_nx.degree, key=lambda x: x[1], reverse=True)][:n]
+    # Create the induced subgraph
+    G_induced = G_nx.subgraph(top_nodes)
+    # Write the graph to file
+    OUTPUT_FILE = os.path.join(GR_DIR, 'super_graph.gml')
+    nx.write_gml(G_induced, OUTPUT_FILE)
+    # Plot the graph
+    pos = nx.circular_layout(G_induced)
+    nx.draw(G_induced, pos, with_labels=False, node_size=500)
+    labels = nx.get_node_attributes(G_induced, 'name')
+    nx.draw_networkx_labels(G_induced, pos, labels, font_size=12)
+    plt.show()
+
+
 #getGraphPerArticle(num_articles)
 getGraphUnion(num_articles)
+getSuperGraph()

@@ -46,15 +46,3 @@ for i, article_text in enumerate(articles_list):
         #Save the filtered tokens in a txt file
         text_file.write(' '.join(filtered_tokens) + "\n")
     
-    # Initialize a defaultdict object with a default value of 0 for any key added to the dictionary
-    word_counts = defaultdict(int)
-    # Absolute frequency
-    for token in filtered_tokens: word_counts[token] += 1
-    total_words = sum(word_counts.values())
-    # Relative frequency
-    relative_frequency = {word: count/total_words for word, count in word_counts.items()}
-    # Top n most common words
-    top_n = 10
-    most_common_words = sorted(relative_frequency.items(), key=lambda x: x[1], reverse=True)[:top_n]
-    #print(most_common_words)
-    
