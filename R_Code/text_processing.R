@@ -17,6 +17,11 @@ library(igraph)
 # Network Visualization (D3.js)
 library(networkD3)
 
+
+FILE_DIR <- dirname(rstudioapi::getSourceEditorContext()$path)
+setwd(FILE_DIR)
+PARENT_DIR <- file.path(FILE_DIR, "..")
+
 stop_words_es <- tibble(word = unlist(c(read.table(file.path(getwd(), "stop_words_spanish_2.txt"), quote="\"", comment.char=""))), lexicon = "custom")
 n <- 8
 for (i in 0:n){
@@ -226,7 +231,7 @@ for (i in 0:n){
     filter(weight >= umbral) %>%
     graph_from_data_frame(directed = FALSE)
   g <- igraph::simplify(g)
-  graph_name <- paste0("graph_skipgrams_", i, ".gml")
+  graph_name <- file.path(PARENT_DIR, "Graphs", paste0("graph_skipgrams_", i, ".gml"))
   write.graph(g, graph_name, format = "gml")
   V(g)$cluster <- clusters(graph = g)$membership
   gcc <- induced_subgraph(graph = g, vids = which(V(g)$cluster == which.max(clusters(graph = g)$csize)))
