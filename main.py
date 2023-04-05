@@ -38,8 +38,10 @@ for file in [f for f in os.listdir(ART_DIR) if os.path.isfile(os.path.join(ART_D
             article_text += text
     articles_list.append(article_text)
 
+R_DIR = os.path.join(BASE_DIR, 'R_Code')
 for i, article_text in enumerate(articles_list):
-    with open(f"article_{i}.txt", "w", encoding='utf-8') as text_file:
+    file = f"article_{i}.txt"
+    with open(os.path.join(R_DIR, file), "w", encoding='utf-8') as text_file:
         tokens = word_tokenize(article_text)
         # Filter the stop words
         filtered_tokens = [token for token in tokens if token not in stop_words and len(token) >= 2]
