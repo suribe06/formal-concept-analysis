@@ -17,34 +17,34 @@ def extract_text_from_pdfs(merge=False):
         if not file.endswith('.pdf'):
             continue
         article_path = os.path.join(ART_DIR, file)
+        article_text = ""
         with open(article_path, 'rb') as f:
             pdf = PdfReader(f)
-            article_text = ""
             for j, page in enumerate(pdf.pages):
                 if j == 0: continue # Skip the first page
                 # Extract the text from the page
-                text = page.extract_text()
+                page_text = page.extract_text()
                 # Convert text to ASCII
-                text = unidecode(text)
+                page_text = unidecode(page_text)
                 # Convert all symbols to lower case
-                text = text.lower()
+                page_text = page_text.lower()
                 # Remove numeric characters
-                text = re.sub(r'\d+', '', text)
+                page_text = re.sub(r'\d+', '', page_text)
                 # Remove non-alphanumeric characters
-                text = re.sub(r"[^\w']+", " ", text)
+                page_text = re.sub(r"[^\w']+", " ", page_text)
                 # Replace one or more whitespace characters with a single space
-                text = re.sub(r'\s+', ' ', text)
+                page_text = re.sub(r'\s+', ' ', page_text)
                 # Remove stop words
-                tokens = word_tokenize(text)
+                tokens = word_tokenize(page_text)
                 filtered_tokens = [token for token in tokens if token not in stop_words]
                 article_text += ' '.join(filtered_tokens)
         if merge:
             text += article_text
         else:
             with open(os.path.join(R_DIR, f'article_{i}.txt'), 'w', encoding='utf-8') as text_file:
-                text_file.write(article_text)
+                text_file.write(article_text + '\n')
     if merge:
         with open(os.path.join(R_DIR, 'combined_articles.txt'), 'w', encoding='utf-8') as text_file:
-            text_file.write(text)
+            text_file.write(text + '\n')
 
 extract_text_from_pdfs(merge=True)

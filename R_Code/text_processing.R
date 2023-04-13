@@ -17,15 +17,15 @@ library(igraph)
 # Network Visualization (D3.js)
 library(networkD3)
 
-
 FILE_DIR <- dirname(rstudioapi::getSourceEditorContext()$path)
 setwd(FILE_DIR)
 PARENT_DIR <- file.path(FILE_DIR, "..")
 
-stop_words_es <- tibble(word = unlist(c(read.table(file.path(getwd(), "stop_words_spanish_2.txt"), quote="\"", comment.char=""))), lexicon = "custom")
-n <- 8
-for (i in 0:n){
-  arti <- paste0("article_", i, ".txt")
+stop_words <- tibble(word = unlist(c(read.table(file.path(getwd(), "stopwords.txt"), quote="\"", comment.char=""))), lexicon = "custom")
+#n <- 88
+#for (i in 0:n){
+  #arti <- paste0("articles/article_", i, ".txt")
+  arti <- paste0("articles/combined_articles.txt")
   text <- readLines(file.path(getwd(), arti))
   text_df <- tibble(line = 1:length(text), text = text)
    
@@ -85,10 +85,10 @@ for (i in 0:n){
   dim(frec_comun)[1]/dim(frec)[1] 
    
   #Sentiment Analysis
-  positive_words <- read.csv(file.path(getwd(), "positive_words_es_2.txt"), sep="") %>%
+  positive_words <- read.csv(file.path(getwd(), "positive-words.txt"), sep="") %>%
    mutate(sentiment = "Positivo")
   colnames(positive_words)[1] <- "word"
-  negative_words <- read.csv(file.path(getwd(), "negative_words_es_2.txt"), sep="") %>%
+  negative_words <- read.csv(file.path(getwd(), "negative-words.txt"), sep="") %>%
    mutate(sentiment = "Negativo")
   colnames(negative_words)[1] <- "word"
   sentiment_words <- bind_rows(positive_words, negative_words)
@@ -147,8 +147,8 @@ for (i in 0:n){
    
   text_df_bi %>%
    separate(bigram, c("word1", "word2"), sep = " ") %>%
-   filter(!word1 %in% stop_words_es$word) %>%
-   filter(!word2 %in% stop_words_es$word) %>%
+   filter(!word1 %in% stop_words$word) %>%
+   filter(!word2 %in% stop_words$word) %>%
    filter(!is.na(word1)) %>% 
    filter(!is.na(word2)) %>%
    count(word1, word2, sort = TRUE) %>%
@@ -215,8 +215,8 @@ for (i in 0:n){
   ##### omitir stop words
   text_df_skip %>%
     separate(skipgram, c("word1", "word2"), sep = " ") %>%
-    filter(!word1 %in% stop_words_es$word) %>%
-    filter(!word2 %in% stop_words_es$word) %>%
+    filter(!word1 %in% stop_words$word) %>%
+    filter(!word2 %in% stop_words$word) %>%
     filter(!is.na(word1)) %>% 
     filter(!is.na(word2)) %>%
     count(word1, word2, sort = TRUE) %>%
@@ -231,7 +231,8 @@ for (i in 0:n){
     filter(weight >= umbral) %>%
     graph_from_data_frame(directed = FALSE)
   g <- igraph::simplify(g)
-  graph_name <- file.path(PARENT_DIR, "Graphs", paste0("graph_skipgrams_", i, ".gml"))
+  #graph_name <- file.path(PARENT_DIR, "Graphs", paste0("graph_skipgrams_", i, ".gml"))
+  graph_name <- file.path(PARENT_DIR, "Graphs", paste0("graph_skipgrams.gml"))
   write.graph(g, graph_name, format = "gml")
   V(g)$cluster <- clusters(graph = g)$membership
   gcc <- induced_subgraph(graph = g, vids = which(V(g)$cluster == which.max(clusters(graph = g)$csize)))
@@ -241,4 +242,4 @@ for (i in 0:n){
   #plot(gcc, layout = layout_with_fr, vertex.color = adjustcolor('darkolivegreen4', 0.1), vertex.frame.color = 'darkolivegreen4', vertex.size = 2*strength(gcc), vertex.label = NA)
   title(main = "Giant Connected Component (Skipgrams)", outer = T, line = -1)
   #dev.off()
-}
+#}
