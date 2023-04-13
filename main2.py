@@ -12,6 +12,7 @@ ART_DIR = os.path.join(BASE_DIR, 'articles')
 R_DIR = os.path.join(BASE_DIR, 'R_Code')
 
 # Extracting the text of the PDF articles and writing to a text file
+all_text = ""
 for i, file in enumerate(os.listdir(ART_DIR)):
     # Read only PDF files
     if not file.endswith('.pdf'):
@@ -38,5 +39,10 @@ for i, file in enumerate(os.listdir(ART_DIR)):
             tokens = word_tokenize(text)
             filtered_tokens = [token for token in tokens if token not in stop_words]
             article_text += ' '.join(filtered_tokens)
+            all_text += ' '.join(filtered_tokens)
         with open(os.path.join(R_DIR, f'article_{i}.txt'), 'w', encoding='utf-8') as text_file:
             text_file.write(article_text)
+
+# Save all text to a single text file
+with open(os.path.join(R_DIR, 'all_articles.txt'), 'w', encoding='utf-8') as text_file:
+    text_file.write(all_text)
