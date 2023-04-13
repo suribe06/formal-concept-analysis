@@ -87,7 +87,7 @@ def getGraphUnion(num_articles):
     return
 
 def getSuperGraph():
-    GRAPH_FILE = os.path.join(GR_DIR, f'graph.gml')
+    GRAPH_FILE = os.path.join(GR_DIR, f'graph_skipgrams.gml')
     G_nx = nx.read_gml(GRAPH_FILE, label='id')
     # Get the 10 nodes with the highest degree
     n = 10
@@ -95,7 +95,7 @@ def getSuperGraph():
     # Create the induced subgraph
     G_induced = G_nx.subgraph(top_nodes)
     # Write the graph to file
-    OUTPUT_FILE = os.path.join(GR_DIR, 'super_graph.gml')
+    OUTPUT_FILE = os.path.join(GR_DIR, 'super_graph_top_n.gml')
     nx.write_gml(G_induced, OUTPUT_FILE)
     # Plot the graph
     pos = nx.circular_layout(G_induced)
@@ -104,7 +104,6 @@ def getSuperGraph():
     nx.draw_networkx_labels(G_induced, pos, labels, font_size=12)
     plt.show()
 
-
 #getGraphPerArticle(num_articles)
-getGraphUnion(num_articles)
+#getGraphUnion(num_articles)
 getSuperGraph()
