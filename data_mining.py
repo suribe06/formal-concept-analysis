@@ -31,12 +31,12 @@ def extract_text_from_pdfs(merge=False):
                 # Remove numeric characters
                 page_text = re.sub(r'\d+', '', page_text)
                 # Remove non-alphanumeric characters
-                page_text = re.sub(r"[^\w']+", " ", page_text)
+                page_text = re.sub(r"[^a-zA-Z]", " ", page_text)
                 # Replace one or more whitespace characters with a single space
                 page_text = re.sub(r'\s+', ' ', page_text)
                 # Remove stop words
                 tokens = word_tokenize(page_text)
-                filtered_tokens = [token for token in tokens if token not in stop_words]
+                filtered_tokens = [token for token in tokens if token not in stop_words and len(token) > 1]
                 article_text += ' '.join(filtered_tokens)
         if merge:
             text += article_text
