@@ -3,9 +3,9 @@ import re
 from PyPDF2 import PdfReader
 from unidecode import unidecode
 from nltk.tokenize import word_tokenize
-from nltk.corpus import stopwords
 
-stop_words = set(stopwords.words('english'))
+with open('stopwords.txt', 'r') as file:
+    stop_words = [line.rstrip() for line in file]
 
 def extract_text_from_pdfs(merge=False):
     BASE_DIR = os.getcwd()
@@ -36,7 +36,7 @@ def extract_text_from_pdfs(merge=False):
                 page_text = re.sub(r'\s+', ' ', page_text)
                 # Remove stop words
                 tokens = word_tokenize(page_text)
-                filtered_tokens = [token for token in tokens if token not in stop_words and len(token) > 1]
+                filtered_tokens = [token for token in tokens if token not in stop_words and len(token) > 2]
                 article_text += ' '.join(filtered_tokens)
         if merge:
             text += article_text

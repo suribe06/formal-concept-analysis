@@ -1,272 +1,277 @@
 graph [
   node [
     id 0
-    label "38"
-    name "political"
+    label "32"
+    name "policy"
   ]
   node [
     id 1
-    label "9"
-    name "de"
+    label "0"
+    name "latin"
   ]
   node [
     id 2
-    label "13"
-    name "la"
-  ]
-  node [
-    id 3
-    label "14"
+    label "2"
     name "new"
   ]
   node [
+    id 3
+    label "8"
+    name "american"
+  ]
+  node [
     id 4
-    label "111"
-    name "state"
+    label "9"
+    name "social"
   ]
   node [
     id 5
-    label "110"
-    name "one"
-  ]
-  node [
-    id 6
-    label "336"
+    label "269"
     name "government"
   ]
   node [
+    id 6
+    label "78"
+    name "development"
+  ]
+  node [
     id 7
-    label "598"
-    name "also"
+    label "79"
+    name "state"
   ]
   node [
     id 8
-    label "55"
-    name "e"
+    label "15"
+    name "political"
   ]
   node [
     id 9
-    label "29"
-    name "social"
+    label "45"
+    name "economic"
   ]
   edge [
     source 0
     target 1
-    weight 4
+    weight 16
   ]
   edge [
     source 0
     target 2
-    weight 3
+    weight 33
   ]
   edge [
     source 0
     target 3
-    weight 63
-  ]
-  edge [
-    source 0
-    target 9
-    weight 105
-  ]
-  edge [
-    source 0
-    target 8
-    weight 7
-  ]
-  edge [
-    source 0
-    target 5
-    weight 15
+    weight 18
   ]
   edge [
     source 0
     target 4
-    weight 21
+    weight 35
+  ]
+  edge [
+    source 0
+    target 8
+    weight 18
+  ]
+  edge [
+    source 0
+    target 9
+    weight 43
   ]
   edge [
     source 0
     target 6
-    weight 15
+    weight 54
   ]
   edge [
     source 0
     target 7
+    weight 36
+  ]
+  edge [
+    source 0
+    target 5
+    weight 19
+  ]
+  edge [
+    source 1
+    target 2
+    weight 43
+  ]
+  edge [
+    source 1
+    target 3
+    weight 756
+  ]
+  edge [
+    source 1
+    target 4
     weight 25
   ]
   edge [
     source 1
-    target 2
-    weight 1290
-  ]
-  edge [
-    source 1
-    target 3
-    weight 3
+    target 8
+    weight 58
   ]
   edge [
     source 1
     target 9
-    weight 30
-  ]
-  edge [
-    source 1
-    target 8
-    weight 87
-  ]
-  edge [
-    source 1
-    target 5
-    weight 1
-  ]
-  edge [
-    source 1
-    target 4
-    weight 5
+    weight 37
   ]
   edge [
     source 1
     target 6
-    weight 4
+    weight 25
   ]
   edge [
     source 1
     target 7
-    weight 8
+    weight 16
+  ]
+  edge [
+    source 1
+    target 5
+    weight 3
   ]
   edge [
     source 2
-    target 9
+    target 3
+    weight 29
+  ]
+  edge [
+    source 2
+    target 4
     weight 39
   ]
   edge [
     source 2
     target 8
-    weight 14
+    weight 64
   ]
   edge [
     source 2
-    target 5
-    weight 1
-  ]
-  edge [
-    source 2
-    target 4
-    weight 1
-  ]
-  edge [
-    source 2
-    target 6
-    weight 4
-  ]
-  edge [
-    source 2
-    target 7
-    weight 3
-  ]
-  edge [
-    source 3
     target 9
-    weight 38
-  ]
-  edge [
-    source 3
-    target 8
-    weight 6
-  ]
-  edge [
-    source 3
-    target 5
-    weight 14
-  ]
-  edge [
-    source 3
-    target 4
-    weight 43
-  ]
-  edge [
-    source 3
-    target 6
-    weight 20
-  ]
-  edge [
-    source 3
-    target 7
-    weight 20
-  ]
-  edge [
-    source 4
-    target 9
-    weight 32
-  ]
-  edge [
-    source 4
-    target 8
-    weight 3
-  ]
-  edge [
-    source 4
-    target 5
-    weight 13
-  ]
-  edge [
-    source 4
-    target 6
     weight 15
   ]
   edge [
+    source 2
+    target 6
+    weight 27
+  ]
+  edge [
+    source 2
+    target 7
+    weight 43
+  ]
+  edge [
+    source 2
+    target 5
+    weight 20
+  ]
+  edge [
+    source 3
+    target 4
+    weight 23
+  ]
+  edge [
+    source 3
+    target 8
+    weight 98
+  ]
+  edge [
+    source 3
+    target 9
+    weight 10
+  ]
+  edge [
+    source 3
+    target 6
+    weight 18
+  ]
+  edge [
+    source 3
+    target 7
+    weight 15
+  ]
+  edge [
+    source 3
+    target 5
+    weight 6
+  ]
+  edge [
     source 4
+    target 8
+    weight 104
+  ]
+  edge [
+    source 4
+    target 9
+    weight 102
+  ]
+  edge [
+    source 4
+    target 6
+    weight 38
+  ]
+  edge [
+    source 4
+    target 7
+    weight 33
+  ]
+  edge [
+    source 4
+    target 5
+    weight 18
+  ]
+  edge [
+    source 5
+    target 8
+    weight 16
+  ]
+  edge [
+    source 5
+    target 9
+    weight 6
+  ]
+  edge [
+    source 5
+    target 6
+    weight 10
+  ]
+  edge [
+    source 5
+    target 7
+    weight 15
+  ]
+  edge [
+    source 6
+    target 8
+    weight 41
+  ]
+  edge [
+    source 6
+    target 9
+    weight 90
+  ]
+  edge [
+    source 6
     target 7
     weight 17
   ]
   edge [
-    source 5
-    target 9
-    weight 7
-  ]
-  edge [
-    source 5
+    source 7
     target 8
-    weight 2
-  ]
-  edge [
-    source 5
-    target 6
-    weight 10
-  ]
-  edge [
-    source 5
-    target 7
-    weight 10
-  ]
-  edge [
-    source 6
-    target 9
-    weight 18
-  ]
-  edge [
-    source 6
-    target 8
-    weight 5
-  ]
-  edge [
-    source 6
-    target 7
     weight 20
   ]
   edge [
     source 7
     target 9
-    weight 11
-  ]
-  edge [
-    source 7
-    target 8
-    weight 3
+    weight 13
   ]
   edge [
     source 8
     target 9
-    weight 9
+    weight 129
   ]
 ]

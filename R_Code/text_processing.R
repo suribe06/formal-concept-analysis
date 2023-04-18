@@ -44,6 +44,7 @@ stop_words <- tibble(word = unlist(c(read.table(file.path(getwd(), "stopwords.tx
     count(word, sort = TRUE) %>%
     filter(n > 7) %>%
     mutate(word = reorder(word, n)) %>%
+    head(20) %>%
     ggplot(aes(x = word, y = n)) +
     theme_light() + 
     geom_col(fill = 'darkolivegreen4', alpha = 0.8) +
@@ -86,35 +87,38 @@ stop_words <- tibble(word = unlist(c(read.table(file.path(getwd(), "stopwords.tx
    
   #Sentiment Analysis
   positive_words <- read.csv(file.path(getwd(), "positive-words.txt"), sep="") %>%
-   mutate(sentiment = "Positivo")
+    mutate(sentiment = "Positivo")
   colnames(positive_words)[1] <- "word"
   negative_words <- read.csv(file.path(getwd(), "negative-words.txt"), sep="") %>%
-   mutate(sentiment = "Negativo")
+    mutate(sentiment = "Negativo")
   colnames(negative_words)[1] <- "word"
   sentiment_words <- bind_rows(positive_words, negative_words)
-  # comparacion de diccionarios
+  
+  # Comparacion de diccionarios
   get_sentiments("bing") %>%
-   count(sentiment)
+    count(sentiment)
   
   sentiment_words %>%
-   count(sentiment)
-   
+    count(sentiment)
+  
   suppressMessages(suppressWarnings(library(RColorBrewer)))
   text_df %>%
     inner_join(sentiment_words) %>%
     count(word, sentiment, sort = TRUE) %>%
-    filter(n > 2) %>%
+    group_by(sentiment) %>%
+    slice_head(n = 10) %>%
+    ungroup() %>%
     mutate(n = ifelse(sentiment == "Negativo", -n, n)) %>%
-    mutate(word = reorder(word, n)) %>%
+    mutate(word = factor(word, levels = rev(unique(word)))) %>%
     ggplot(aes(word, n, fill = sentiment)) +
     geom_col() +
     scale_fill_manual(values = brewer.pal(8,'Dark2')[c(2,5)]) +
-    coord_flip(ylim = c(-7,7)) +
+    coord_flip(ylim = c(-10,10)) +
     labs(y = "Frecuencia",
-        x = NULL,
-        title = "Article: Count per sentiment") +
+         x = NULL,
+         title = "Count per sentiment") +
     theme_minimal() -> p1
-   
+  
   grid.arrange(p1)
    
   suppressMessages(suppressWarnings(library(reshape2)))
@@ -140,7 +144,6 @@ stop_words <- tibble(word = unlist(c(read.table(file.path(getwd(), "stopwords.tx
   head(text_df_bi, n = 10)
   
   #top 10 bigrams
-  # hay bigramas que no son interesantes (e.g., "de la")
   text_df_bi %>%
    count(bigram, sort = TRUE) %>%
    head(n = 10)
@@ -166,7 +169,7 @@ stop_words <- tibble(word = unlist(c(read.table(file.path(getwd(), "stopwords.tx
    graph_from_data_frame(directed = FALSE)
   set.seed(123)
   #png("filter_graph.png", width = 15, height = 15, units = "cm", res=400)
-  plot(g, layout = layout_with_graphopt(g, charge = 0.1), vertex.color = 1, vertex.frame.color = 1, vertex.size = 3, vertex.label.color = 'black', vertex.label.cex = 1, vertex.label.dist = 1, main = "Umbral = 3") 
+  #plot(g, layout = layout_with_graphopt(g, charge = 0.1), vertex.color = 1, vertex.frame.color = 1, vertex.size = 3, vertex.label.color = 'black', vertex.label.cex = 1, vertex.label.dist = 1, main = "Umbral = 3") 
   #write.graph(g, "filter_graph.gml", format = "gml")
   #dev.off()
   
@@ -238,8 +241,8 @@ stop_words <- tibble(word = unlist(c(read.table(file.path(getwd(), "stopwords.tx
   gcc <- induced_subgraph(graph = g, vids = which(V(g)$cluster == which.max(clusters(graph = g)$csize)))
   set.seed(123)
   #png("GCC_skipgram_article.png", width = 15, height = 15, units = "cm", res=400)
-  plot(gcc, layout = layout_with_fr, vertex.color = 1, vertex.frame.color = 1, vertex.size = 3, vertex.label = NA)
+  #plot(gcc, layout = layout_with_fr, vertex.color = 1, vertex.frame.color = 1, vertex.size = 3, vertex.label = NA)
   #plot(gcc, layout = layout_with_fr, vertex.color = adjustcolor('darkolivegreen4', 0.1), vertex.frame.color = 'darkolivegreen4', vertex.size = 2*strength(gcc), vertex.label = NA)
-  title(main = "Giant Connected Component (Skipgrams)", outer = T, line = -1)
+  #title(main = "Giant Connected Component (Skipgrams)", outer = T, line = -1)
   #dev.off()
 #}
