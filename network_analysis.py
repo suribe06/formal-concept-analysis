@@ -1,6 +1,8 @@
 import os
 import networkx as nx
 import matplotlib.pyplot as plt
+import snap as sn
+import numpy as np
 
 BASE_DIR = os.getcwd()
 GR_DIR = os.path.join(BASE_DIR, 'Graphs')
@@ -86,6 +88,14 @@ def getGraphUnion(num_articles):
     plt.show()
     return
 
+def convert_networkx_to_snap(G):
+    SG = sn.TUNGraph.New()
+    for u in list(G.nodes):
+        SG.AddNode(int(u))
+    for (node1,node2,data) in G.edges(data=True):
+        SG.AddEdge(int(node1), int(node2))
+    return SG
+
 def getSuperGraph():
     GRAPH_FILE = os.path.join(GR_DIR, f'graph_skipgrams.gml')
     G_nx = nx.read_gml(GRAPH_FILE, label='id')
@@ -103,6 +113,49 @@ def getSuperGraph():
     labels = nx.get_node_attributes(G_induced, 'name')
     nx.draw_networkx_labels(G_induced, pos, labels, font_size=12)
     plt.show()
+    return
+
+def getIntervals(metric_data):
+    mean_ = np.mean(metric_data)
+    std_ = np.std(metric_data)
+    # Definir intervalos
+    lower_bound = mean_ - std_
+    upper_bound = mean_ + std_
+    # Iterar sobre los datos y clasificarlos
+    clasification = []
+    for x in metric_data:
+        if x < lower_bound:
+            clasification.append("BAJO")
+        elif x > upper_bound:
+            clasification.append("ALTO")
+        else:
+            clasification.append("MEDIO")
+    return clasification
+
+def getGraphProperties(G):
+    #Clustering Coefficient
+    avg_clustering = G.GetClustCf(False, -1)
+    print("Average Clustering Coefficient: {0}".format(avg_clustering))
+    #Closeness
+    c = []
+    for NI in G.Nodes():
+        CloseCentr = G.GetClosenessCentr(NI.GetId())
+        c.append(CloseCentr)
+    #Eigenvector
+    e = []
+    NIdEigenH = G.GetEigenVectorCentr()
+    for NI in G.Nodes():
+        e.append(NIdEigenH[NI.GetId()])
+    #Farness
+    f = []
+    for NI in G.Nodes():
+        FarCentr = G.GetFarnessCentr(NI.GetId())
+        f.append(FarCentr)
+    #Node Eccentricity
+    ecc = []
+    for NI in G.Nodes():
+        ecc.append(G.GetNodeEcc(NI.GetId(), False))
+    return
 
 #getGraphPerArticle(num_articles)
 #getGraphUnion(num_articles)
