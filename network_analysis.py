@@ -3,160 +3,69 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import snap as sn
 import numpy as np
+import pandas as pd
+import random
+import time
 
 BASE_DIR = os.getcwd()
 GR_DIR = os.path.join(BASE_DIR, 'Graphs')
 
-num_articles = 9
-
-def getGraphPerArticle(num_articles):
-    for i in range(num_articles):
-        GRAPH_FILE = os.path.join(GR_DIR, f'graph_skipgrams_{i}.gml')
-        G_nx = nx.read_gml(GRAPH_FILE, label='id')
-        # Get the 10 nodes with the highest degree
-        n = 10
-        top_nodes = [node[0] for node in sorted(G_nx.degree, key=lambda x: x[1], reverse=True)][:n]
-        # Create the induced subgraph
-        G_induced = G_nx.subgraph(top_nodes)
-        # Plot the graph
-        pos = nx.spring_layout(G_induced, k=0.5, iterations=50)
-        plt.clf()
-        nx.draw(G_induced, pos, with_labels=False, node_size=500)
-        labels = nx.get_node_attributes(G_induced, 'name')
-        nx.draw_networkx_labels(G_induced, pos, labels, font_size=12)
-        # Add edge weights to the plot
-        edge_labels = {(u, v): G_induced[u][v]['weight'] for u, v in G_induced.edges}
-        #nx.draw_networkx_edge_labels(G_induced, pos, edge_labels=edge_labels)
-        plt.savefig(f"graph_plot_{i}.png")
-
-def getGraphUnion(num_articles):
-    G_combined = nx.Graph()
-    # Dictionary to store the mapping between old node IDs and new node IDs
-    node_labels = {}
-    for i in range(num_articles):
-        GRAPH_FILE = os.path.join(GR_DIR, f'graph_skipgrams_{i}.gml')
-        G_nx = nx.read_gml(GRAPH_FILE, label='id')
-        # Get the 10 nodes with the highest degree
-        n = 10
-        top_nodes = [node[0] for node in sorted(G_nx.degree, key=lambda x: x[1], reverse=True)][:n]
-        # Create the induced subgraph
-        G_induced = G_nx.subgraph(top_nodes)
-        # Loop through all the nodes in the induced subgraph
-        for node, data in G_induced.nodes(data=True):
-            # Get the node name
-            node_name = data['name']
-            # Check if node name is not in the mapping
-            if node_name not in node_labels:
-                # If not, create a new node ID and add the node name to the mapping
-                node_id = len(node_labels)
-                node_labels[node_name] = node_id
-                # Add the node to the combined graph with the node ID and name
-                G_combined.add_node(node_id, name=node_name)
-            else:
-                # If node name is already in the mapping, get the node ID
-                node_id = node_labels[node_name] 
-            # Iterate over neighbors and edge data for the current node
-            for neighbor, edge_data in G_induced[node].items():
-                # Get the neighbor name
-                neighbor_name = G_induced.nodes[neighbor]['name']
-                # Check if neighbor name is not in the mapping
-                if neighbor_name not in node_labels:
-                    # If not, create a new node ID and add the neighbor name to the mapping
-                    neighbor_id = len(node_labels)
-                    node_labels[neighbor_name] = neighbor_id
-                    # Add the neighbor to the combined graph with the node ID and name
-                    G_combined.add_node(neighbor_id, name=neighbor_name)
-                else:
-                    # If neighbor name is already in the mapping, get the node ID
-                    neighbor_id = node_labels[neighbor_name]
-                # Check if there is not an edge between node_id and neighbor_id in the combined graph
-                if not G_combined.has_edge(node_id, neighbor_id):
-                    # If not, add an edge between node_id and neighbor_id with edge data
-                    G_combined.add_edge(node_id, neighbor_id, **edge_data)
-    # Write the graph to file
-    OUTPUT_FILE = os.path.join(GR_DIR, 'graph_union.gml')
-    nx.write_gml(G_combined, OUTPUT_FILE)
-    n = 10
-    top_nodes = [node[0] for node in sorted(G_combined.degree, key=lambda x: x[1], reverse=True)][:n]
-    # Create the induced subgraph
-    G_induced = G_combined.subgraph(top_nodes)
-    # Plot the graph
-    pos = nx.circular_layout(G_induced)
-    nx.draw(G_induced, pos, with_labels=False, node_size=500)
-    labels = nx.get_node_attributes(G_induced, 'name')
-    nx.draw_networkx_labels(G_induced, pos, labels, font_size=12)
-    plt.show()
-    return
-
-def convert_networkx_to_snap(G):
-    SG = sn.TUNGraph.New()
-    for u in list(G.nodes):
-        SG.AddNode(int(u))
-    for (node1,node2,data) in G.edges(data=True):
-        SG.AddEdge(int(node1), int(node2))
-    return SG
-
-def getSuperGraph():
-    GRAPH_FILE = os.path.join(GR_DIR, f'graph_skipgrams.gml')
-    G_nx = nx.read_gml(GRAPH_FILE, label='id')
-    # Get the 10 nodes with the highest degree
-    n = 10
-    top_nodes = [node[0] for node in sorted(G_nx.degree, key=lambda x: x[1], reverse=True)][:n]
-    # Create the induced subgraph
-    G_induced = G_nx.subgraph(top_nodes)
-    # Write the graph to file
-    OUTPUT_FILE = os.path.join(GR_DIR, 'super_graph_top_n.gml')
-    nx.write_gml(G_induced, OUTPUT_FILE)
-    # Plot the graph
-    pos = nx.circular_layout(G_induced)
-    nx.draw(G_induced, pos, with_labels=False, node_size=500)
-    labels = nx.get_node_attributes(G_induced, 'name')
-    nx.draw_networkx_labels(G_induced, pos, labels, font_size=12)
-    plt.show()
-    return
-
 def getIntervals(metric_data):
     mean_ = np.mean(metric_data)
     std_ = np.std(metric_data)
-    # Definir intervalos
     lower_bound = mean_ - std_
     upper_bound = mean_ + std_
-    # Iterar sobre los datos y clasificarlos
     clasification = []
     for x in metric_data:
-        if x < lower_bound:
-            clasification.append("BAJO")
-        elif x > upper_bound:
-            clasification.append("ALTO")
-        else:
-            clasification.append("MEDIO")
+        if x < lower_bound: clasification.append("BAJO")
+        elif x > upper_bound: clasification.append("ALTO")
+        else: clasification.append("MEDIO")
     return clasification
 
-def getGraphProperties(G):
-    #Clustering Coefficient
-    avg_clustering = G.GetClustCf(False, -1)
-    print("Average Clustering Coefficient: {0}".format(avg_clustering))
-    #Closeness
-    c = []
-    for NI in G.Nodes():
-        CloseCentr = G.GetClosenessCentr(NI.GetId())
-        c.append(CloseCentr)
-    #Eigenvector
-    e = []
-    NIdEigenH = G.GetEigenVectorCentr()
-    for NI in G.Nodes():
-        e.append(NIdEigenH[NI.GetId()])
-    #Farness
-    f = []
-    for NI in G.Nodes():
-        FarCentr = G.GetFarnessCentr(NI.GetId())
-        f.append(FarCentr)
-    #Node Eccentricity
-    ecc = []
-    for NI in G.Nodes():
-        ecc.append(G.GetNodeEcc(NI.GetId(), False))
+def centralityMeasureAnalysisNX():
+    GRAPH_FILE = os.path.join(GR_DIR, f'graph_skipgrams.gml')
+    G_nx = nx.read_gml(GRAPH_FILE, label='id')
+    # Take a random sample of nodes including the n nodes with the highest degree
+    n = 15
+    top_nodes = [node[0] for node in sorted(G_nx.degree, key=lambda x: x[1], reverse=True)][:n]
+    n_sample = 7000
+    random.seed(56)
+    random_nodes = random.sample(list(G_nx.nodes), n_sample)
+    sample_nodes = top_nodes + random_nodes
+    # Generate induced graph with selected nodes
+    H = G_nx.subgraph(sample_nodes)
+    H_copy = H.copy()
+    # Remove nodes with 0 degree
+    #isolated_nodes = list(nx.isolates(H_copy))
+    #H_copy.remove_nodes_from(isolated_nodes)
+    print(f'numero de nodos de grafo inducido por la muestra: {H_copy.number_of_nodes()}')
+    print(f'numero de aristas de grafo inducido por la muestra: {H_copy.number_of_edges()}')
+    print(nx.is_connected(H_copy))
+    print(nx.number_connected_components(H_copy))
+    start = time.time()
+    # Centrality measures
+    closeness = nx.closeness_centrality(H_copy, distance='weight')
+    eigenvector = nx.eigenvector_centrality_numpy(H_copy, weight='weight')
+    betweenness = nx.betweenness_centrality(H_copy, weight='weight')
+    clustering = nx.clustering(H_copy, weight='weight')
+    end = time.time()
+    print("Tiempo de ejecucion calculo metricas:", end - start)
+    # Obtain the metrics of the top n nodes with the highest degree
+    top_closeness = {node: closeness[node] for node in top_nodes}
+    top_eigenvector = {node: eigenvector[node] for node in top_nodes}
+    top_betweenness = {node: betweenness[node] for node in top_nodes}
+    top_clustering = {node: clustering[node] for node in top_nodes}
+    # Convert metrics to cathegorical data
+    keys_nodes = list(top_closeness.keys())
+    cl_top_closeness = getIntervals(list(top_closeness.values()))
+    cl_top_eigenvector = getIntervals(list(top_eigenvector.values()))
+    cl_top_betweenness = getIntervals(list(top_betweenness.values()))
+    cl_top_clustering = getIntervals(list(top_clustering.values()))
+    # Save the data in csv
+    columns_ = ['node', 'closeness', 'eigenvector', 'betweenness', 'clustering']
+    df = pd.DataFrame(list(zip(keys_nodes, cl_top_closeness, cl_top_eigenvector,
+                    cl_top_betweenness, cl_top_clustering)), columns=columns_)
+    df.to_csv('lattice_data.csv', index=False)
     return
 
-#getGraphPerArticle(num_articles)
-#getGraphUnion(num_articles)
-getSuperGraph()
+centralityMeasureAnalysisNX()
