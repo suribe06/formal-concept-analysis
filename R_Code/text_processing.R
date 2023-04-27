@@ -62,28 +62,12 @@ stop_words <- tibble(word = unlist(c(read.table(file.path(getwd(), "stopwords.tx
     with(wordcloud(words = word, freq = n, max.words = 20, colors = 'darkolivegreen4'))
   title(main = "Word Cloud") 
   
-  #relative frequencies
-  bind_rows(mutate(.data = text_df, author = "Articulos")) %>%
-   count(author, word) %>%
-   group_by(author) %>%
-   mutate(proportion = n/sum(n)) %>%
-   select(-n) %>%
-   spread(author, proportion, fill = 0) -> frec
-  
-  frec %<>% 
-   select(word, Articulos)
-  dim(frec)
-  head(frec, n = 10)
-  
-  #top 10 tokens
+  #relative frequencies (top 10 tokens)
   frec %>%
    filter(Articulos != 0) %>%
    arrange(desc(Articulos)) -> frec_comun
   dim(frec_comun) 
   head(frec_comun, n = 10)
-  
-  # proporcion palabras en comun
-  dim(frec_comun)[1]/dim(frec)[1] 
    
   #Sentiment Analysis
   positive_words <- read.csv(file.path(getwd(), "positive-words.txt"), sep="") %>%
@@ -94,10 +78,7 @@ stop_words <- tibble(word = unlist(c(read.table(file.path(getwd(), "stopwords.tx
   colnames(negative_words)[1] <- "word"
   sentiment_words <- bind_rows(positive_words, negative_words)
   
-  # Comparacion de diccionarios
-  get_sentiments("bing") %>%
-    count(sentiment)
-  
+  #Count words by sentiment
   sentiment_words %>%
     count(sentiment)
   
@@ -136,12 +117,10 @@ stop_words <- tibble(word = unlist(c(read.table(file.path(getwd(), "stopwords.tx
   names(text) <- NULL 
   text_df <- tibble(line = 1:length(text), text = text)
   
-  #tokenize in bigrames, in this case each token is a bigrame
+  #tokenize in bigrams, in this case each token is a bigram
   text_df %>%
    unnest_tokens(input = text, output = bigram, token = "ngrams", n = 2) %>%
    filter(!is.na(bigram)) -> text_df_bi
-  dim(text_df_bi)
-  head(text_df_bi, n = 10)
   
   #top 10 bigrams
   text_df_bi %>%
@@ -161,7 +140,6 @@ stop_words <- tibble(word = unlist(c(read.table(file.path(getwd(), "stopwords.tx
   
   ##### definir una red a partir de la frecuencia (weight) de los bigramas
   # binaria, no dirigida, ponderada, simple
-  # se recomienda variar el umbral del filtro y construir bigramas no consecutivos para obtener redes con mayor informacion
   suppressMessages(suppressWarnings(library(igraph)))
   umbral <- 3
   g <- text_df_bi_counts %>%
@@ -198,22 +176,17 @@ stop_words <- tibble(word = unlist(c(read.table(file.path(getwd(), "stopwords.tx
   text_df %>%
     unnest_tokens( input = text, output = skipgram, token = "skip_ngrams", n = 2) %>%
     filter(!is.na(skipgram)) -> text_df_skip
-  dim(text_df_skip)
-  head(text_df_skip, n = 10)
   
   ##### remover unigramas
   suppressMessages(suppressWarnings(library(ngram)))
   # contar palabras en cada skip-gram
   text_df_skip$num_words <- text_df_skip$skipgram %>% 
     map_int(.f = ~ wordcount(.x))
-  head(text_df_skip, n = 10)
   
   # remover unigramas
   text_df_skip %<>% 
     filter(num_words == 2) %>% 
     select(-num_words)
-  dim(text_df_skip)
-  head(text_df_skip, n = 10)
   
   ##### omitir stop words
   text_df_skip %>%
