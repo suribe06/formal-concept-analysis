@@ -57,7 +57,27 @@ text_df %>%
   with(wordcloud(words = word, freq = n, max.words = 20, colors = 'darkolivegreen4'))
 title(main = "Word Cloud") 
 
-#relative frequencies (top 10 tokens)
+#relative frequencies 
+bind_rows(mutate(.data = text_df, author = "Articulos")) %>%
+  count(author, word) %>%
+  group_by(author) %>%
+  mutate(proportion = n/sum(n)) %>%
+  select(-n) %>%
+  spread(author, proportion, fill = 0) -> frec
+
+frec %<>% 
+  select(word, Articulos)
+
+#top 10 tokens
+frec %>%
+  filter(Articulos != 0) %>%
+  arrange(desc(Articulos)) -> frec_comun
+dim(frec_comun) 
+head(frec_comun, n = 10)
+
+
+
+#(top 10 tokens)
 frec %>%
   filter(Articulos != 0) %>%
   arrange(desc(Articulos)) -> frec_comun
