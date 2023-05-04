@@ -142,4 +142,11 @@ def centralityMeasureAnalysisSNAP():
 
 #centralityMeasureAnalysisNX(False)
 #centralityMeasureAnalysisSNAP()
-gitUpdate('update lattice data')
+
+
+def prueba():
+    with open('writing.txt', 'w') as file:
+        pass
+    gitUpdate('test')
+
+prueba()
