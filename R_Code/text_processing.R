@@ -1,3 +1,4 @@
+#install.packages(c('glue', 'cowplot', 'magrittr', 'plotly', 'tidyverse', 'widyr', 'hms', 'lubridate', 'tidytext', 'tm', 'wordcloud', 'igraph', 'networkD3'))
 # Data Wrangling and Visualization
 library(glue)
 library(cowplot)
@@ -17,7 +18,8 @@ library(igraph)
 # Network Visualization (D3.js)
 library(networkD3)
 
-FILE_DIR <- dirname(rstudioapi::getSourceEditorContext()$path)
+#FILE_DIR <- dirname(rstudioapi::getSourceEditorContext()$path)
+FILE_DIR <- getwd()
 setwd(FILE_DIR)
 PARENT_DIR <- file.path(FILE_DIR, "..")
 arti <- paste0("articles/combined_articles.txt")
