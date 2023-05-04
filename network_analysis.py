@@ -138,15 +138,8 @@ def centralityMeasureAnalysisSNAP():
     df = pd.DataFrame(list(zip(node_names, cl_top_closeness, cl_top_betweenness, cl_top_farness,
                     cl_top_eccentricity, cl_top_clustering, cl_top_degree)), columns=columns_)
     df.to_csv('lattice_data_2.csv', index=False)
+    gitUpdate('update lattice data')
     return
 
 #centralityMeasureAnalysisNX(False)
-#centralityMeasureAnalysisSNAP()
-
-
-def prueba():
-    with open('writing.txt', 'w') as file:
-        pass
-    gitUpdate('test')
-
-prueba()
+centralityMeasureAnalysisSNAP()
