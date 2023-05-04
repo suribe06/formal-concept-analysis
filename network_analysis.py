@@ -73,6 +73,14 @@ def networkxToSnap(G):
         SG.AddEdge(int(u), int(v))
     return SG
 
+def gitUpdate(commit):
+    command_add = "git add ."
+    command_commit = f"git commit -m '{commit}'"
+    command_push = "git push"
+    os.system(command_add)
+    os.system(command_commit)
+    os.system(command_push)
+
 def centralityMeasureAnalysisSNAP():
     """
     This function uses the snap library to obtain the centrality metrics of the graph. 
@@ -133,4 +141,6 @@ def centralityMeasureAnalysisSNAP():
     return
 
 #centralityMeasureAnalysisNX(False)
-centralityMeasureAnalysisSNAP()
+#centralityMeasureAnalysisSNAP()
+
+gitUpdate("update lattice data")
