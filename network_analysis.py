@@ -142,5 +142,4 @@ def centralityMeasureAnalysisSNAP():
 
 #centralityMeasureAnalysisNX(False)
 #centralityMeasureAnalysisSNAP()
-
-gitUpdate("update lattice data")
+gitUpdate('update lattice data')
