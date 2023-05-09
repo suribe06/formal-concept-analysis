@@ -16,9 +16,9 @@ def getIntervals(metric_data):
     upper_bound = mean_ + std_
     clasification = []
     for x in metric_data:
-        if x < lower_bound: clasification.append("BAJO")
-        elif x > upper_bound: clasification.append("ALTO")
-        else: clasification.append("MEDIO")
+        if x < lower_bound: clasification.append("low")
+        elif x > upper_bound: clasification.append("high")
+        else: clasification.append("medium")
     return clasification
 
 def centralityMeasureAnalysisNX(weighted=True):
