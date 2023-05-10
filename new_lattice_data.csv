@@ -1,4 +1,4 @@
-;closeness_BAJO;closeness_MEDIO;closeness_ALTO;betweenness_BAJO;betweenness_MEDIO;betweenness_ALTO;farness_BAJO;farness_MEDIO;farness_ALTO;eccentricity_BAJO;eccentricity_MEDIO;eccentricity_ALTO;clustering_BAJO;clustering_MEDIO;clustering_ALTO;degree_BAJO;degree_MEDIO;degree_ALTO
+;closeness_low;closeness_medium;closeness_high;betweenness_low;betweenness_medium;betweenness_high;farness_low;farness_medium;farness_high;eccentricity_low;eccentricity_medium;eccentricity_high;clustering_low;clustering_medium;clustering_high;degree_low;degree_medium;degree_high
 state;0;0;1;0;0;1;1;0;0;1;0;0;1;0;0;0;0;1
 new;0;0;1;0;0;1;1;0;0;1;0;0;1;0;0;0;0;1
 social;0;0;1;0;0;1;1;0;0;1;0;0;1;0;0;0;0;1
