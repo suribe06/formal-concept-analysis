@@ -166,7 +166,6 @@ def getInducedSubGraph():
     new_labels = dict(zip(top_node_ids, names))
     print(new_labels)
     H.SaveGViz("eigenvector.dot", "Top Eigenvector Nodes", new_labels)
-
     degree = np.zeros(N, dtype=float)
     for NI in nodes:
         node_id = NI.GetId()
