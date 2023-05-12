@@ -1,0 +1,72 @@
+/*****
+Top Degree Nodes
+*****/
+
+graph G {
+  graph [splines=true overlap=false]
+  node  [shape=ellipse, width=0.3, height=0.3]
+  0 [label="new"];
+  1 [label="civil"];
+  2 [label="human"];
+  3 [label="left"];
+  4 [label="social"];
+  5 [label="rule"];
+  6 [label="foreign"];
+  7 [label="international"];
+  8 [label="journal"];
+  9 [label="buenos"];
+  10 [label="indigenous"];
+  11 [label="sao"];
+  12 [label="com"];
+  13 [label="distributed"];
+  14 [label="journals"];
+  0 -- 1;
+  0 -- 2;
+  0 -- 3;
+  0 -- 4;
+  0 -- 5;
+  0 -- 6;
+  0 -- 7;
+  0 -- 8;
+  0 -- 10;
+  0 -- 11;
+  0 -- 12;
+  1 -- 2;
+  1 -- 4;
+  1 -- 5;
+  1 -- 10;
+  2 -- 4;
+  2 -- 5;
+  2 -- 6;
+  2 -- 7;
+  2 -- 8;
+  2 -- 10;
+  2 -- 11;
+  2 -- 12;
+  3 -- 4;
+  3 -- 5;
+  3 -- 6;
+  3 -- 9;
+  4 -- 5;
+  4 -- 7;
+  4 -- 8;
+  4 -- 9;
+  4 -- 10;
+  4 -- 11;
+  4 -- 12;
+  5 -- 7;
+  5 -- 8;
+  5 -- 10;
+  5 -- 12;
+  6 -- 7;
+  7 -- 8;
+  7 -- 10;
+  7 -- 14;
+  8 -- 9;
+  8 -- 12;
+  10 -- 12;
+  11 -- 12;
+  12 -- 14;
+  13 -- 14;
+  label = "\nTop Degree Nodes\n";  fontsize=24;
+}
